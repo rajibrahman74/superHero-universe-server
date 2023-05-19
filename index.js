@@ -35,13 +35,20 @@ async function run() {
 
     const superHerosCollection = client.db("super-hero-DB").collection("super-hero-toys");
 
+    // get operations
         app.get("/herotoys" , async(req,res) =>{
             const cursor = superHerosCollection.find();
             const result = await cursor.toArray()
             res.send(result)
         })
 
+        // post operations
 
+        app.post("/herotoys", async (req, res) => {
+            const toys = req.body;
+            const result = await superHerosCollection.insertOne(toys)
+            res.send(result)
+        })
 
 
 
