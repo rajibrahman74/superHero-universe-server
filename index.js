@@ -52,6 +52,8 @@ async function run() {
       res.send(result);
     });
 
+
+    
     // get the use own data
 
     app.get("/mytoys", async (req, res) => {
@@ -59,9 +61,26 @@ async function run() {
       if (req.query?.email) {
         query = { seller_email: req.query.email };
       }
-      const result = await superHerosCollection.find(query).toArray();
-      res.send(result);
+      const result = await superHerosCollection
+        .find(query)
+        .sort({ price: 1 })
+        .toArray();
+      // res.send(result);
+
+      // Convert the "price" field to a numeric type for correct sorting
+      const sortedResult = result.map((toy) => ({
+        ...toy,
+        price: parseFloat(toy.price),
+      }));
+
+      // Sort the array based on the numeric "price" field
+      sortedResult.sort((a, b) => a.price - b.price);
+
+      res.send(sortedResult);
     });
+
+
+
 
     // my toys delete operations
     app.delete("/mytoys/:id", async (req, res) => {
