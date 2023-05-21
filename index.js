@@ -71,6 +71,19 @@ async function run() {
       res.send(result);
     });
 
+
+    // update toy operations
+    app.get("/update/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await superHerosCollection.findOne(query);
+      res.send(result)
+  })
+
+
+
+
+
     // Get all toys or filter by seller email
     // app.get("/addtoys", async (req, res) => {
     //   let query = {};
