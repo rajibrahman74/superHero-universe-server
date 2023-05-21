@@ -71,37 +71,31 @@ async function run() {
       res.send(result);
     });
 
-
     // update toy operations
     app.get("/update/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await superHerosCollection.findOne(query);
-      res.send(result)
-  })
+      res.send(result);
+    });
 
+    // update some information specifice toy
 
-
-
-
-    // Get all toys or filter by seller email
-    // app.get("/addtoys", async (req, res) => {
-    //   let query = {};
-    //   if (req.query?.email) {
-    //     query = { selleremail: req.query.email };
-    //   }
-    //   const result = await superHerosCollection.find(query).toArray();
-    //   res.send(result);
-    // });
-
-    // // Insert a new toy
-    // app.post("/addtoys", async (req, res) => {
-    //   const addedToy = req.body;
-    //   const result = await superHerosCollection.insertOne(addedToy);
-    //   res.send(result);
-    // });
-
-    //
+    app.put("/update/:id", async (req, res) => {
+      const id = req.params.id;
+      const updateToy = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const option = { upsert: true };
+      const toy = {
+        $set: {
+          price: updateToy.price,
+          quantity: updateToy.quantity,
+          description: updateToy.description,
+        },
+      };
+      const result = await superHerosCollection.updateOne(filter, toy, option);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
